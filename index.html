@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreo de Unidades</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css">
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <!--For info bubbles: https://github.com/heremaps/maps-api-for-javascript-examples/issues/108#issuecomment-1864213026-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Rastreo de Unidades</h1>
+        <nav>
+            <ul>
+                <li><a href="#" class="tab" data-target="mapView">Mapa</a></li>
+                <li><a href="#" class="tab" data-target="unitsView">Unidades</a></li>
+                <li><a href="#" class="tab" data-target="settingsView">Flota</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="mapView" class="tab-content">
+            <div id="mapContainer"></div>
+        </section>
+        <section id="unitsView" class="tab-content" style="display: none;">
+            <h2>Listado de Unidades</h2>
+        </section>
+        <section id="settingsView" class="tab-content" style="display: none;">
+            <h2>Configuración</h2>
+        </section>
+    </main>
+    <script src="js/script.js"></script>
+</body>
+</html>
