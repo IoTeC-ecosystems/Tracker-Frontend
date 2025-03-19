@@ -158,4 +158,17 @@ $(document).ready(function() {
     ]
     addMarkers(ui, map, exampleCoordinates, names);
     //setupWebSocket();
+
+    // Agrega las opciones al dropdown
+    var unit_select = $('#unitSelect');
+    names.forEach((name, idx) => {
+        unit_select.append(new Option(name, idx));
+    });
+
+    // Maneja el cambio de la selección del dropdown
+    unit_select.change(function() {
+        var selected_index = $(this).val();
+        var selected_name = names[selected_index];
+        $('#unitDetails').html(`<p>Detalles de la unidad: ${selected_name}</p>`);
+    });
 });

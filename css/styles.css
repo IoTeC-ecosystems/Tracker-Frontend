@@ -106,3 +106,21 @@ main {
     background-color: #ccc;
     margin: 10px auto;
 }
+
+/* Dropdown de Unidades */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.dropdown-container {
+    margin: 20px;
+}
+
+#unitSelect {
+    padding: 5px;
+    font-size: 1em;
+}
