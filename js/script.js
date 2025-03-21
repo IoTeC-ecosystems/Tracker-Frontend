@@ -2,7 +2,7 @@ let unidades = [];
 
 function initializeMap() {
     var platform = new H.service.Platform({
-        'apikey': '2NqlHbtulBRhUv9D4RFjlH1LQZpLcVuPzR7BxxAjW80'
+        'apikey': 'api-key'
     });
     var defaultLayers = platform.createDefaultLayers();
 
