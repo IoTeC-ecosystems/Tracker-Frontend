@@ -149,3 +149,19 @@ main {
 #additionalData {
     margin-top: 20px;
 }
+
+#fleetSummary {
+    margin: 20px 0;
+}
+
+#fleetChartsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-x: auto;
+}
+
+#fleetChartsContainer > div {
+    width: 30%;
+    height: 400px;
+    margin: 10px;
+}

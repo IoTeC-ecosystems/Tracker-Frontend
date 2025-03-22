@@ -125,6 +125,103 @@ async function fetchUnitDetails(unitIds) {
     }
 }
 
+function populateFleetSummaryView() {
+    var fleet_view = $('#fleetSummaryView');
+    var total_units = 500;
+    var active_units = 420;
+    fleet_view.append(`
+        <div id="fleetSummary">
+        <div class="row"><div class="col">Número Total de Unidades:</div><div class="col" id="totalUnits">${total_units}</div></div>
+        <div class="row"><div class="col">Número de Unidades Activas:</div><div class="col" id="activeUnits">${active_units}</div></div>
+        </div>`
+    );
+    fleet_view.append(`<div id="fleetChartsContainer" style="display: flex; flex-wrap: wrap; overflow-x: auto;"></div>`);
+    var fleet_charts = $('#fleetChartsContainer');
+    var charts_ids = [
+        'avgFuelConsumptUnit',
+        'totalFuelConsumptionFleet',
+        'avgDistanceTraveledUnit',
+        'totalDistanceTraveledFleet',
+        'avgStopingTimeUnit',
+        'avgActiveTimeUnit'
+    ];
+
+    var avg_fuel_per_unit = [
+        {day: 1, value: 15},
+        {day: 2, value: 10},
+        {day: 3, value: 20},
+        {day: 4, value: 15},
+        {day: 5, value: 12},
+    ];
+    var total_fuel_fleet = [
+        {day: 1, value: 100},
+        {day: 2, value: 120},
+        {day: 3, value: 90},
+        {day: 4, value: 110},
+        {day: 5, value: 130}
+    ];
+    var avg_dist_unit = [
+        {day: 1, value: 300},
+        {day: 2, value: 200},
+        {day: 3, value: 180},
+        {day: 4, value: 400},
+        {day: 5, value: 320},
+    ];
+    var total_dist_fleet = [
+        {day: 1, value: 1500},
+        {day: 2, value: 1000},
+        {day: 3, value: 900},
+        {day: 4, value: 2000},
+        {day: 5, value: 1600},
+    ];
+    var avg_stop_time_unit = [
+        {day: 1, value: 30},
+        {day: 2, value: 45},
+        {day: 3, value: 55},
+        {day: 4, value: 34},
+        {day: 5, value: 70},
+    ];
+    var avg_active_time_unit = [
+        {day: 1, value: 6},
+        {day: 2, value: 7},
+        {day: 3, value: 9},
+        {day: 4, value: 5},
+        {day: 5, value: 8},
+    ];
+    var data = [
+        avg_fuel_per_unit,
+        total_fuel_fleet,
+        avg_dist_unit,
+        total_dist_fleet,
+        avg_stop_time_unit,
+        avg_active_time_unit,
+    ];
+
+    var chart_names = [
+        'Avg. Fuel Consumption',
+        'Total Fuel Consumption',
+        'Avg. Distance Travelled',
+        'Total Distance Travelled',
+        'Avg. Stopping Time',
+        'Avg. Active Time',
+    ];
+
+    charts_ids.forEach((name, idx) => {
+        fleet_charts.append(`<div id="${name}" style="width: 30%; height: 400px;"></div>`);
+        agCharts.AgCharts.create({
+            container: document.getElementById(name),
+            data: data[idx],
+            series: [{
+                type: 'line',
+                xKey: 'day',
+                yKey: 'value',
+                title: chart_names[idx]
+            }]
+        });
+    })
+    
+}
+
 $(document).ready(function() {
     var [map, ui] = initializeMap();
     // Crear la barra lateral oculta inicialmente con el botón de cerrar
@@ -144,6 +241,8 @@ $(document).ready(function() {
             setTimeout(function() {
                 window.dispatchEvent(new Event('resize'));
             }, 200);
+        } else if (target === 'fleetSummaryView') {
+            populateFleetSummaryView();
         }
     });
 
@@ -220,7 +319,6 @@ $(document).ready(function() {
         ];
 
         // Crear gráficos usando AG Charts
-        console.log(agCharts.AgCharts);
         agCharts.AgCharts.create({
             container: document.getElementById('fuelChart'),
             data: fuelData,
