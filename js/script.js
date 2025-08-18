@@ -1,4 +1,6 @@
 let unidades = [];
+let lista_unidades = [];
+let socket = undefined;
 
 function initializeMap() {
     var platform = new H.service.Platform({
@@ -22,11 +24,30 @@ function initializeMap() {
 }
 
 function setupWebSocket() {
-    const socket = new WebSocket('wss://webapps.tracker.com/coord');
+    socket = io('http://localhost:5000/', {
+        auth: {
+            token: 'token'
+        },
+    });
 
-    socket.onopen = function() {
-        console.log('WebSocket connection established');
-    };
+    socket.on("connect", () => {
+        // Connnected
+    });
+
+    socket.on("disconnect", () => {
+        // Disconnected
+    });
+
+    socket.on("units", (data) => {
+        const unidades = JSON.parse(data['data']);
+
+        if (unidades['code'] == "available units") {
+            lista_unidades = unidades['units'].map(unit => ({
+                id: unit.unit,
+            }));
+        }
+        updateUnitsPanel();
+    });
 
     socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
@@ -39,16 +60,6 @@ function setupWebSocket() {
             dir: unit.dir
         }));
         // Aquí puedes actualizar los marcadores en el mapa si es necesario
-    };
-
-    socket.onerror = function(error) {
-        console.error('WebSocket error:', error);
-    };
-
-    socket.onclose = function() {
-        console.log('WebSocket connection closed');
-        // Reintentar la conexión después de un tiempo
-        setTimeout(setupWebSocket, 5000);
     };
 }
 
@@ -257,7 +268,7 @@ $(document).ready(function() {
         'Objeto C'
     ]
     addMarkers(ui, map, exampleCoordinates, names);
-    //setupWebSocket();
+    setupWebSocket();
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {
