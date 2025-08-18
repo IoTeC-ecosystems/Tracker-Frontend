@@ -29,6 +29,14 @@
     <main>
         <section id="mapView" class="tab-content">
             <div id="mapContainer" style="width: 100%; height: 100vh;"></div>
+            <!-- Panel retráctil -->
+            <div id="unitsPanel" class="retract-panel collapsed">
+                <button id="togglePanelBtn">&lt;</button>
+                <div id="unitsPanelContent">
+                    <h3>UUIDs de Unidades</h3>
+                    <ul id="uuidList"></ul>
+                </div>
+            </div>
         </section>
         <section id="unitsView" class="tab-content" style="display: none;">
             <h2>Listado de Unidades</h2>

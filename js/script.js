@@ -23,6 +23,30 @@ function initializeMap() {
     return [map, ui];
 }
 
+function showUnitsPanel() {
+    if (lista_unidades.length > 0) {
+        const $uuidList = $('#uuidList');
+        $uuidList.empty();
+        lista_unidades.forEach(unit => {
+            const $li = $('<li></li>').text(unit.id);
+            $uuidList.append($li);
+        });
+        $('#unitsPanel').removeClass('collapsed').show();
+    }
+}
+
+function hideUnitsPanel() {
+    $('#unitsPanel').hide();
+}
+
+function updateUnitsPanel() {
+    if(lista_unidades.length > 0 && $('#unitsView').is(':visible')) {
+        showUnitsPanel();
+    } else {
+        hideUnitsPanel();
+    }
+}
+
 function setupWebSocket() {
     socket = io('http://localhost:5000/', {
         auth: {
@@ -254,6 +278,21 @@ $(document).ready(function() {
             }, 200);
         } else if (target === 'fleetSummaryView') {
             populateFleetSummaryView();
+        } else if (target === 'unitsView') {
+            updateUnitsPanel();
+        } else {
+            hideUnitsPanel();
+        }
+    });
+
+    $(document).on('click', '#togglePanelBtn', function() {
+        const $panel = $('#unitsPanel');
+        if ($panel.hasClass('collapsed')) {
+            $panel.removeClass('collapsed');
+            $(this).html('&lt;');
+        } else {
+            $panel.addClass('collapsed');
+            $(this).html('&gt;');
         }
     });
 

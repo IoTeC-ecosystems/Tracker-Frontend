@@ -165,3 +165,57 @@ main {
     height: 400px;
     margin: 10px;
 }
+
+.retract-panel {
+    position: fixed;
+    top: 80px;
+    right: 0;
+    background: #fff;
+    border-left: 2px solid #ccc;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: auto;
+    height: auto;
+    min-width: 120px;
+    max-width: 90vw;
+    max-height: 80vh;
+}
+
+.retract-panel.collapsed {
+    transform: translateX(90%);
+}
+
+#togglePanelBtn {
+    width: 30px;
+    height: 40px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+    border-radius: 4px 0 0 4px;
+    margin-top: 10px;
+}
+
+#unitsPanelContent {
+    padding: 15px;
+    width: auto;
+    max-width: 60vw;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#uuidList {
+    list-style: square outside;
+    padding: 0;
+    margin: 0;
+    word-break: break-all;
+}
+
+li {
+    cursor: pointer;
+    padding: 8px;
+    margin: 2px 0;
+}
