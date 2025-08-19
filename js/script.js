@@ -1,10 +1,13 @@
-let unidades = [];
 let lista_unidades = [];
 let socket = undefined;
+var map, ui;
+let mapObjects = null;
+let mapBubbles = [];
+var unit_select = null;
 
 function initializeMap() {
     var platform = new H.service.Platform({
-        'apikey': 'api-key'
+        'apikey': 'KrJ0xvR1vF8jtcyeEUmJ9p6FbGya9eFNUMVIUERrKCw'
     });
     var defaultLayers = platform.createDefaultLayers();
 
@@ -47,6 +50,15 @@ function updateUnitsPanel() {
     }
 }
 
+function updateUnitsSelect() {
+    // Agrega las opciones al dropdown de la pestaña unitsView
+    unit_select = $('#unitSelect');
+    unit_select.empty();
+    lista_unidades.forEach((unit, idx) => {
+        unit_select.append(new Option(unit.id, idx));
+    });
+}
+
 function setupWebSocket() {
     socket = io('http://localhost:5000/', {
         auth: {
@@ -71,39 +83,68 @@ function setupWebSocket() {
             }));
         }
         updateUnitsPanel();
+        updateUnitsSelect();
     });
 
-    socket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        unidades = data.unidades.map(unit => ({
-            id: unit.id,
-            nombre: unit.nombre,
-            lat: parseFloat(unit.lat),
-            long: parseFloat(unit.long),
-            vel: parseFloat(unit.vel),
-            dir: unit.dir
-        }));
-        // Aquí puedes actualizar los marcadores en el mapa si es necesario
-    };
+    socket.on("gps data", (data) => {
+        const units = JSON.parse(data);
+        let units_set = new Set();
+        let geo_data = {};
+        // New data, iterate to get
+        if (units['code'] === 'new data') {
+            for (const unit of units['units']) {
+                if (units_set.has(unit['uuid'])) {
+                    if (geo_data[unit['uuid']].datetime > unit['datetime']) {
+                        geo_data[unit['uuid']].lat = unit['latitude'];
+                        geo_data[unit['uuid']].long = unit['longitude'];
+                        geo_data[unit['uuid']].height = unit['height'];
+                        geo_data[unit['uuid']].vel = unit['velocity'];
+                        geo_data[unit['uuid']].datetime = unit['datetime'];
+                    }
+                    continue;
+                }
+                units_set.add(unit['uuid']);
+                geo_data[unit['uuid']] = {
+                    lat: unit['latitude'],
+                    long: unit['longitude'],
+                    height: unit['height'],
+                    vel: unit['velocity'],
+                    datetime: unit['datetime']
+                };
+            }
+            addMarkers(ui, map, geo_data);
+        }
+    });
 }
 
-function addMarkers(ui, map, coordinates, names) {
-    var mapObjects = new H.map.Group();
+function addMarkers(ui, map, geo_data) {
+    // Remove existing markers if any
+    if (mapObjects) {
+        map.removeObject(mapObjects);
+    }
+    // Remove existing bubbles if any
+    if (mapBubbles && mapBubbles.length > 0) {
+        mapBubbles.forEach(bubble => {
+            ui.removeBubble(bubble);
+        });
+        mapBubbles = [];
+    }
+    mapObjects = new H.map.Group();
 
-    coordinates.forEach((coord, index) => {
-        if (isNaN(coord[0]) || isNaN(coord[1])) return;
-        var unitName = names[index];
-        var marker = new H.map.Marker({ lat: coord[1], lng: coord[0] });
+    for (const name in geo_data) {
+        if (!geo_data.hasOwnProperty(name)) continue;
+        var marker = new H.map.Marker({ lat: geo_data[name].lat, lng: geo_data[name].long });
         marker.setData({
-            nombre: unitName,
-            lat: coord[1],
-            lng: coord[0]
+            nombre: name,
+            lat: geo_data[name].lat,
+            lng: geo_data[name].long
         });
-        var bubble = new H.ui.InfoBubble({ lat: coord[1], lng: coord[0]}, {
-            content: unitName
+        var bubble = new H.ui.InfoBubble({ lat: geo_data[name].lat, lng: geo_data[name].long }, {
+            content: name
         });
+        mapBubbles.push(bubble);
         marker.addEventListener('tap', function(evt) {
-            var id = `marker-${index}`
+            var id = `marker-${name}`;
             if (!$(`#sidebar div[data-id="${id}"]`).length) {
                 var data = evt.target.getData();
                 var content = `
@@ -113,13 +154,13 @@ function addMarkers(ui, map, coordinates, names) {
                         <div class="row"><div class="col">Longitud:</div><div class="col">${data.lng}</div></div>
                         <div class="separator"></div>
                     </div>
-                `
+                `;
                 $('#sidebar').append(content).show();
             }
         });
         mapObjects.addObject(marker);
         ui.addBubble(bubble);
-    });
+    }
     map.addObject(mapObjects);
 }
 
@@ -262,7 +303,6 @@ $(document).on('click', '#uuidList li', function() {
     const units = {
         "units": [selectedUuid],
     };
-    console.log(units);
     socket.emit('subscribe', JSON.stringify(units));
 });
 
@@ -278,7 +318,7 @@ $(document).on('click', '#togglePanelBtn', function() {
     });
 
 $(document).ready(function() {
-    var [map, ui] = initializeMap();
+    [map, ui] = initializeMap();
     // Crear la barra lateral oculta inicialmente con el botón de cerrar
     $('body').append('<div id="sidebar"><button class="close-btn">X</button></div>');
 
@@ -291,6 +331,9 @@ $(document).ready(function() {
         $('.tab-content').hide();
         $('#' + target).show();
 
+        // Update panel units if necessary
+        updateUnitsPanel();
+
         // Ajustar el tamaño del mapa cuando se cambia a la pestaña de mapa
         if (target === 'mapView') {
             setTimeout(function() {
@@ -298,24 +341,9 @@ $(document).ready(function() {
             }, 200);
         } else if (target === 'fleetSummaryView') {
             populateFleetSummaryView();
-        } else if (target === 'unitsView') {
-            updateUnitsPanel();
-        } else {
-            hideUnitsPanel();
         }
     });
 
-    var exampleCoordinates = [
-        [-101.686, 21.121],
-        [-101.680, 21.125],
-        [-101.670, 21.130]
-    ];
-    var names = [
-        'Objeto A',
-        'Objeto B',
-        'Objeto C'
-    ]
-    addMarkers(ui, map, exampleCoordinates, names);
     setupWebSocket();
 
     // Manejar el botón de cerrar
@@ -323,14 +351,8 @@ $(document).ready(function() {
         $('#sidebar').empty().append('<button class="close-btn">X</button>').hide();
     });
 
-    // Agrega las opciones al dropdown
-    var unit_select = $('#unitSelect');
-    names.forEach((name, idx) => {
-        unit_select.append(new Option(name, idx));
-    });
-
     // Maneja el cambio de la selección del dropdown
-    unit_select.change(function() {
+    /*unit_select.change(function() {
         var selectedIndex = $(this).val();
         var selectedName = names[selectedIndex];
         $('#unitDetails').html(`<p>Detalles de la unidad: ${selectedName}</p>`);
@@ -422,5 +444,5 @@ $(document).ready(function() {
         $('#totalDistance').text(totalDistance);
         $('#unitStatus').text(unitStatus);
         $('#activityTime').text(activityTime);
-    });
+    });*/
 });
