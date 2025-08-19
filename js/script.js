@@ -40,7 +40,7 @@ function hideUnitsPanel() {
 }
 
 function updateUnitsPanel() {
-    if(lista_unidades.length > 0 && $('#unitsView').is(':visible')) {
+    if(lista_unidades.length > 0 && $('#mapView').is(':visible')) {
         showUnitsPanel();
     } else {
         hideUnitsPanel();
@@ -257,6 +257,26 @@ function populateFleetSummaryView() {
     
 }
 
+$(document).on('click', '#uuidList li', function() {
+    var selectedUuid = $(this).text();
+    const units = {
+        "units": [selectedUuid],
+    };
+    console.log(units);
+    socket.emit('subscribe', JSON.stringify(units));
+});
+
+$(document).on('click', '#togglePanelBtn', function() {
+        const $panel = $('#unitsPanel');
+        if ($panel.hasClass('collapsed')) {
+            $panel.removeClass('collapsed');
+            $(this).html('&lt;');
+        } else {
+            $panel.addClass('collapsed');
+            $(this).html('&gt;');
+        }
+    });
+
 $(document).ready(function() {
     var [map, ui] = initializeMap();
     // Crear la barra lateral oculta inicialmente con el botón de cerrar
@@ -282,17 +302,6 @@ $(document).ready(function() {
             updateUnitsPanel();
         } else {
             hideUnitsPanel();
-        }
-    });
-
-    $(document).on('click', '#togglePanelBtn', function() {
-        const $panel = $('#unitsPanel');
-        if ($panel.hasClass('collapsed')) {
-            $panel.removeClass('collapsed');
-            $(this).html('&lt;');
-        } else {
-            $panel.addClass('collapsed');
-            $(this).html('&gt;');
         }
     });
 
