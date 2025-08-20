@@ -30,8 +30,11 @@ function showUnitsPanel() {
     if (lista_unidades.length > 0) {
         const $uuidList = $('#uuidList');
         $uuidList.empty();
-        lista_unidades.forEach(unit => {
-            const $li = $('<li></li>').text(unit.id);
+        lista_unidades.forEach((unit, idx) => {
+            const $li = `<li><div>
+                        <input type="checkbox" name="item${idx}">
+                        <label for="item${idx}">${unit.id}</label>
+                        </div></li>`;
             $uuidList.append($li);
         });
         $('#unitsPanel').removeClass('collapsed').show();
@@ -298,11 +301,16 @@ function populateFleetSummaryView() {
     
 }
 
-$(document).on('click', '#uuidList li', function() {
-    var selectedUuid = $(this).text();
+$(document).on('change', '#unitsPanelContent', function(e) {
+    const checked = $(this).find('input[type="checkbox"]:checked');
+    const selectedUuids = checked.map(function() {
+        return $(this).siblings('label').text();
+    }).get();
+
     const units = {
-        "units": [selectedUuid],
+        "units": selectedUuids,
     };
+    console.log(units);
     socket.emit('subscribe', JSON.stringify(units));
 });
 
