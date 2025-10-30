@@ -7,7 +7,7 @@ var unit_select = null;
 
 function initializeMap() {
     var platform = new H.service.Platform({
-        'apikey': 'KrJ0xvR1vF8jtcyeEUmJ9p6FbGya9eFNUMVIUERrKCw'
+        'apikey': 'key'
     });
     var defaultLayers = platform.createDefaultLayers();
 
@@ -137,15 +137,11 @@ function addMarkers(ui, map, geo_data) {
     for (const name in geo_data) {
         if (!geo_data.hasOwnProperty(name)) continue;
         var marker = new H.map.Marker({ lat: geo_data[name].lat, lng: geo_data[name].long });
-        marker.setData({
-            nombre: name,
-            lat: geo_data[name].lat,
-            lng: geo_data[name].long
-        });
-        var bubble = new H.ui.InfoBubble({ lat: geo_data[name].lat, lng: geo_data[name].long }, {
+        marker.setData({ nombre: name });
+        /*var bubble = new H.ui.InfoBubble({ lat: geo_data[name].lat, lng: geo_data[name].long }, {
             content: name
         });
-        mapBubbles.push(bubble);
+        mapBubbles.push(bubble);*/
         marker.addEventListener('tap', function(evt) {
             var id = `marker-${name}`;
             if (!$(`#sidebar div[data-id="${id}"]`).length) {
@@ -162,7 +158,7 @@ function addMarkers(ui, map, geo_data) {
             }
         });
         mapObjects.addObject(marker);
-        ui.addBubble(bubble);
+        //ui.addBubble(bubble);
     }
     map.addObject(mapObjects);
 }
