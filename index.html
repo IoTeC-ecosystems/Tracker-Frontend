@@ -39,15 +39,20 @@
             </div>
         </section>
         <section id="unitsView" class="tab-content" style="display: none;">
-            <h2>Listado de Unidades</h2>
-            <div class="dropdown-container">
-                <label for="unitSelect">Selecciona una unidad:</label>
-                <select id="unitSelect">
-                    <!-- Opciones se agregarán dinámicamente -->
-                </select>
-            </div>
-            <div id="unitDetails">
-                <!-- Detalles de la unidad se mostrarán aquí -->
+            <div class="col-md-3">
+                <div class="control-panel">
+                    <h5>📊 Visualization Controls</h5>
+                    <!-- Vehicle Selection -->
+                    <div class="mb-3" id="vehicle-selection">
+                        <label class="form-label">Select Vehicles:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAll">
+                                <label class="form-check-label" for="selectAll">
+                                    <strong>Select All</strong>
+                                </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
         <section id="fleetSummaryView" class="tab-content" style="display: none;">
@@ -61,6 +66,7 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
-    <script src="js/script.js?ts=1"></script>
+    <script src="js/plots.js"></script>
+    <script src="js/script.js?s=1"></script>
 </body>
 </html>

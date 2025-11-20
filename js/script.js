@@ -349,6 +349,7 @@ $(document).ready(function() {
     });
 
     setupWebSocket();
+    fillVehicleSelection();
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {
