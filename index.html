@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rastreo de Unidades</title>
     <link rel="stylesheet" href="css/styles.css?ts=10">
+    <link rel="stylesheet" href="css/style_plots.css">
     <!--For info bubbles: https://github.com/heremaps/maps-api-for-javascript-examples/issues/108#issuecomment-1864213026-->
     <link rel="stylesheet" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css">
 </head>
@@ -39,6 +40,7 @@
             </div>
         </section>
         <section id="unitsView" class="tab-content" style="display: none;">
+            <div class="row">
             <div class="col-md-3">
                 <div class="control-panel">
                     <h5>📊 Visualization Controls</h5>
@@ -52,7 +54,15 @@
                                 </label>
                         </div>
                     </div>
+
+                    <!-- Field Selection -->
+                    <div class="mb-3" id="field-selection">
+                        <label for="fieldSelect" class="form-label">Select Parameter:</label>
+                        <select class="form-select" id="fieldSelect">
+                        </select>
+                    </div>
                 </div>
+            </div>
             </div>
         </section>
         <section id="fleetSummaryView" class="tab-content" style="display: none;">

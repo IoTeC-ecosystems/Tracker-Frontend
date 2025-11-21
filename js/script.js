@@ -322,6 +322,7 @@ $(document).on('click', '#togglePanelBtn', function() {
     });
 
 $(document).ready(function() {
+    const apiUrl = 'http://localhost:5000';
     [map, ui] = initializeMap();
     // Crear la barra lateral oculta inicialmente con el botón de cerrar
     $('body').append('<div id="sidebar"><button class="close-btn">X</button></div>');
@@ -349,7 +350,8 @@ $(document).ready(function() {
     });
 
     setupWebSocket();
-    fillVehicleSelection();
+    fillVehicleSelection(apiUrl);
+    fillFieldSelection(apiUrl);
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {
