@@ -1,7 +1,8 @@
 import { apiUrl } from './config.js';
 import { fillVehicleSelection,
          fillFieldSelection,
-         generateTimeSeriesPlot } from './plots.js';
+         generateTimeSeriesPlot,
+         generateDistributionPlot } from './plots.js';
 
 let lista_unidades = [];
 let socket = undefined;
@@ -358,104 +359,10 @@ $(document).ready(function() {
 
     // Associa botones para gráficas
     $('#btnTimeSeries').on('click', generateTimeSeriesPlot);
+    $('#btnDistributionPlot').on('click', generateDistributionPlot);
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {
         $('#sidebar').empty().append('<button class="close-btn">X</button>').hide();
     });
-
-    // Maneja el cambio de la selección del dropdown
-    /*unit_select.change(function() {
-        var selectedIndex = $(this).val();
-        var selectedName = names[selectedIndex];
-        $('#unitDetails').html(`<p>Detalles de la unidad: ${selectedName}</p>`);
-
-        // Agrega contenedores para gráficos y variables
-        $('#unitDetails').append(`
-            <div id="chartsContainer" style="display: flex; justify-content: space-around;">
-                <div id="fuelChart" style="width: 30%; height: 400px;"></div>
-                <div id="speedChart" style="width: 30%; height: 400px;"></div>
-                <div id="distanceChart" style="width: 30%; height: 400px;"></div>
-            </div>
-            <div id="additionalData" style="margin-top: 20px;">
-                <div class="row"><div class="col">Estado del Motor:</div><div class="col" id="motorStatus"></div></div>
-                <div class="row"><div class="col">Distancia Total Recorrida:</div><div class="col" id="totalDistance"></div></div>
-                <div class="row"><div class="col">Estado de la Unidad:</div><div class="col" id="unitStatus"></div></div>
-                <div class="row"><div class="col">Tiempo de Actividad:</div><div class="col" id="activityTime"></div></div>
-            </div>
-        `);
-
-        // Datos de ejemplo para los gráficos
-        var fuelData = [
-            { time: '00:00', value: 10 },
-            { time: '06:00', value: 20 },
-            { time: '12:00', value: 30 },
-            { time: '18:00', value: 40 },
-            { time: '24:00', value: 50 }
-        ];
-
-        var speedData = [
-            { time: '00:00', value: 60 },
-            { time: '06:00', value: 70 },
-            { time: '12:00', value: 80 },
-            { time: '18:00', value: 90 },
-            { time: '24:00', value: 100 }
-        ];
-
-        var distanceData = [
-            { time: 'Day 1', value: 100 },
-            { time: 'Day 2', value: 200 },
-            { time: 'Day 3', value: 300 },
-            { time: 'Day 4', value: 400 },
-            { time: 'Day 5', value: 500 },
-            { time: 'Day 6', value: 600 },
-            { time: 'Day 7', value: 700 }
-        ];
-
-        // Crear gráficos usando AG Charts
-        agCharts.AgCharts.create({
-            container: document.getElementById('fuelChart'),
-            data: fuelData,
-            series: [{
-                type: 'line',
-                xKey: 'time',
-                yKey: 'value',
-                title: 'Consumo de Combustible'
-            }]
-        });
-
-        agCharts.AgCharts.create({
-            container: document.getElementById('speedChart'),
-            data: speedData,
-            series: [{
-                type: 'line',
-                xKey: 'time',
-                yKey: 'value',
-                title: 'Velocidad'
-            }]
-        });
-
-        agCharts.AgCharts.create({
-            container: document.getElementById('distanceChart'),
-            data: distanceData,
-            series: [{
-                type: 'line',
-                xKey: 'time',
-                yKey: 'value',
-                title: 'Distancia Recorrida'
-            }]
-        });
-
-        // Datos adicionales de ejemplo
-        var motorStatus = 'Funcionamiento adecuado';
-        var totalDistance = '1500 km';
-        var unitStatus = 'En servicio';
-        var activityTime = '12 horas';
-
-        // Mostrar datos adicionales
-        $('#motorStatus').text(motorStatus);
-        $('#totalDistance').text(totalDistance);
-        $('#unitStatus').text(unitStatus);
-        $('#activityTime').text(activityTime);
-    });*/
 });
