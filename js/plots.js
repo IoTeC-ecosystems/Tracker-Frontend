@@ -1,5 +1,7 @@
 import { apiUrl } from './config.js';
 
+let scatterMode = false;
+
 function showError(containerId, message) {
     document.getElementById(containerId).innerHTML =
         `<div class="alert alert-danger">${message}</div>`;
@@ -68,7 +70,12 @@ async function fetchFields(apiUrl) {
 
 export async function fillFieldSelection(apiUrl) {
     var staticFields = await fetchFields(apiUrl);
-    const $select = $('#fieldSelect');
+    let $select = $('#fieldSelect');
+    Object.entries(staticFields).forEach(([key, value]) => {
+        const $option = `<option value="${key}">${value}</option>`;
+        $select.append($option);
+    });
+    $select = $('#field2Select');
     Object.entries(staticFields).forEach(([key, value]) => {
         const $option = `<option value="${key}">${value}</option>`;
         $select.append($option);
@@ -103,8 +110,8 @@ async function generatePlot(endpoint) {
         return;
     }
 
-    //scatterMode = false;
-    //document.getElementById('field2Container').style.display = 'none';
+    scatterMode = false;
+    document.getElementById('field2Container').style.display = 'none';
     showLoading('plotContainer');
     const url = apiUrl + endpoint;
     const body = {
@@ -153,14 +160,63 @@ export async function generateCorrelationPlot() {
         return;
     }
 
-    //scatterMode = false;
-    //document.getElementById('field2Container').style.display = 'none';
+    scatterMode = false;
+    document.getElementById('field2Container').style.display = 'none';
 
     showLoading('plotContainer');
     const url = apiUrl + '/api/plot/heatmap';
     const body = {
         units_id: vehicles[0]
     };
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            showError('plotContainer', 'Failed to generate plot.');
+            return;
+        }
+        const data = await response.json();
+        if (data.status === 400) {
+            showError('plotContainer', data.data);
+            return;
+        }
+        showPlot('plotContainer', data.data);
+    } catch (error) {
+        showError('plotContainer', 'Network error while generating plot.');
+    }
+}
+
+export async function toggleScatterMode() {
+    scatterMode = !scatterMode;
+    const field2Container = document.getElementById('field2Container');
+    field2Container.style.display = scatterMode ? 'block' : 'none';
+    if (scatterMode) {
+        await generateScatterPlot();
+    }
+}
+
+async function generateScatterPlot() {
+    const vehicles = getSelectedVehicles();
+    if (vehicles.length === 0) {
+        alert('Please select at least one vehicle');
+        return;
+    }
+
+    showLoading('plotContainer');
+
+    const field1 = getSelectedField();
+    const field2 = document.getElementById('field2Select').value;
+    const body = {
+        units_id: vehicles,
+        field_x: field1,
+        field_y: field2
+    };
+    const url = new URL(apiUrl + '/api/plot/scatter');
     try {
         const response = await fetch(url, {
             method: 'POST',

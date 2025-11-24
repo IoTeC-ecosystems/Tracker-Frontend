@@ -58,8 +58,12 @@
                     <!-- Field Selection -->
                     <div class="mb-3" id="field-selection">
                         <label for="fieldSelect" class="form-label">Select Parameter:</label>
-                        <select class="form-select" id="fieldSelect">
-                        </select>
+                        <select class="form-select" id="fieldSelect"></select>
+                    </div>
+                    <!-- Second Field for Scatter Plot -->
+                    <div class="mb-3" id="field2Container" style="display: none;">
+                        <label for="field2Select" class="form-label">Second Parameter:</label>
+                        <select class="form-select" id="field2Select"></select>
                     </div>
                     <!-- Plot Type Selection -->
                     <div class="mb-3">
@@ -68,7 +72,7 @@
                             <button class="btn btn-outline-primary" id="btnTimeSeries">📈 Time Series</button>
                             <button class="btn btn-outline-success" id="btnDistributionPlot">📊 Distribution</button>
                             <button class="btn btn-outline-info" id="btnBoxPlot">📦 Box Plot</button>
-                            <button class="btn btn-outline-warning" onclick="">🎯 Scatter Plot</button>
+                            <button class="btn btn-outline-warning" id="btnScatterPlot">🎯 Scatter Plot</button>
                             <button class="btn btn-outline-secondary" id="btnCorrHeatmap">🔥 Correlation Heatmap</button>
                         </div>
                     </div>

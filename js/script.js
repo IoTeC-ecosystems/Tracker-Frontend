@@ -4,7 +4,8 @@ import { fillVehicleSelection,
          generateTimeSeriesPlot,
          generateDistributionPlot,
          generateBoxPlot,
-         generateCorrelationPlot } from './plots.js';
+         generateCorrelationPlot,
+         toggleScatterMode } from './plots.js';
 
 let lista_unidades = [];
 let socket = undefined;
@@ -364,6 +365,7 @@ $(document).ready(function() {
     $('#btnDistributionPlot').on('click', generateDistributionPlot);
     $('#btnBoxPlot').on('click', generateBoxPlot);
     $('#btnCorrHeatmap').on('click', generateCorrelationPlot);
+    $('#btnScatterPlot').on('click', toggleScatterMode);
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {
