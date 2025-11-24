@@ -1,3 +1,8 @@
+import { apiUrl } from './config.js';
+import { fillVehicleSelection,
+         fillFieldSelection,
+         generateTimeSeriesPlot } from './plots.js';
+
 let lista_unidades = [];
 let socket = undefined;
 var map, ui;
@@ -164,7 +169,6 @@ function addMarkers(ui, map, geo_data) {
 }
 
 async function fetchUnitDetails(unitIds) {
-    const url = 'https://webapps.tracker.com/details';
     const requestData = {
         unidades: unitIds.map(id => ({ "id": id }))
     };
@@ -322,7 +326,6 @@ $(document).on('click', '#togglePanelBtn', function() {
     });
 
 $(document).ready(function() {
-    const apiUrl = 'http://localhost:5000';
     [map, ui] = initializeMap();
     // Crear la barra lateral oculta inicialmente con el botón de cerrar
     $('body').append('<div id="sidebar"><button class="close-btn">X</button></div>');
@@ -352,6 +355,9 @@ $(document).ready(function() {
     setupWebSocket();
     fillVehicleSelection(apiUrl);
     fillFieldSelection(apiUrl);
+
+    // Associa botones para gráficas
+    $('#btnTimeSeries').on('click', generateTimeSeriesPlot);
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {

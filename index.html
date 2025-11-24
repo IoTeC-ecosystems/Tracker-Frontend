@@ -61,6 +61,46 @@
                         <select class="form-select" id="fieldSelect">
                         </select>
                     </div>
+                    <!-- Plot Type Selection -->
+                    <div class="mb-3">
+                        <label class="form-label">Plot Type:</label>
+                        <div class="btn-group-verticald-grid gap-2">
+                            <button class="btn btn-outline-primary" id="btnTimeSeries">📈 Time Series</button>
+                            <button class="btn btn-outline-success" onclick="generateDistributionPlot()">📊 Distribution</button>
+                            <button class="btn btn-outline-info" onclick="generateBoxPlot()">📦 Box Plot</button>
+                            <button class="btn btn-outline-warning" onclick="toggleScatterMode()">🎯 Scatter Plot</button>
+                            <button class="btn btn-outline-secondary" onclick="generateCorrelationPlot()">🔥 Correlation Heatmap</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Plot Display Area -->
+            <div class="col-md-9">
+                <div class="plot-container">
+                    <div id="plotContainer">
+                        <div class="text-center text-muted p-5">
+                        <h4>🎨 Vehicle Engine Data Visualization</h4>
+                        <p>Select vehicles and a plot type to begin visualization</p>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h6>📈 Available Plot Types:</h6>
+                                <ul class="text-start"><li><strong>Time Series:</strong> Track parameters over time</li>
+                                    <li><strong>Distribution:</strong> See data distribution patterns</li>
+                                    <li><strong>Box Plot:</strong> Compare vehicles statistically</li>
+                                    <li><strong>Scatter Plot:</strong> Analyze relationships between parameters</li>
+                                    <li><strong>Correlation Heatmap:</strong> Find parameter correlations</li>
+                                    <li><strong>Performance Dashboard:</strong> Comprehensive engine analysis</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6"><h6>🔧 Engine Parameters:</h6>
+                                <ul class="text-start"><li>Engine Speed (RPM)</li>
+                                    <li>Vehicle Speed (km/h)</li>
+                                    <li>Intake Manifold Pressure (kPa)</li>
+                                    <li>Throttle Position (%)</li><li>Engine Temperature(%)</li><li>Torque Measurements(%)</li></ul>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             </div>
@@ -76,7 +116,6 @@
     <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
-    <script src="js/plots.js"></script>
-    <script src="js/script.js?s=1"></script>
+    <script type="module" src="js/script.js"></script>
 </body>
 </html>
