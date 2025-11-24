@@ -95,85 +95,9 @@ function getSelectedField() {
     return document.getElementById('fieldSelect').value;
 }
 
-export async function generateTimeSeriesPlot() {
+async function generatePlot(endpoint) {
     const vehicles = getSelectedVehicles();
-    const _field = getSelectedField();
-    if (vehicles.length === 0) {
-        alert('Please select at least one vehicle.');
-        return;
-    }
-
-    showLoading('plotContainer');
-    const url = apiUrl + '/api/plot/timeseries';
-    const body = {
-        units_id: vehicles,
-        field: _field
-    };
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-        if (!response.ok) {
-            showError('plotContainer', 'Failed to generate plot.');
-            return;
-        }
-        const data = await response.json();
-        if (data.status === 400) {
-            showError('plotContainer', data.data);
-            return;
-        }
-        showPlot('plotContainer', data.data);
-    } catch (error) {
-        showError('plotContainer', 'Network error while generating plot.');
-    }
-}
-
-export async function generateDistributionPlot() {
-    const vehicles = getSelectedVehicles();
-    if (vehicles.length === 0) {
-        alert('Please select at least one vehicle');
-        return;
-    }
-
-    //document.getElementById('field2Container').style.display = 'none';
-    showLoading('plotContainer');
-
     const field = getSelectedField();
-    const body = {
-        units_id: vehicles,
-        field: field
-    };
-    const url = new URL(apiUrl + '/api/plot/distribution');
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-        if (!response.ok) {
-            showError('plotContainer', 'Failed to generate plot.');
-            return;
-        }
-        const data = await response.json();
-        if (data.status === 400) {
-            showError('plotContainer', data.data);
-            return;
-        }
-        showPlot('plotContainer', data.data);
-    } catch (error) {
-        showError('plotContainer', 'Network error while generating plot.');
-        return;
-    }
-}
-
-export async function generateBoxPlot() {
-    const vehicles = getSelectedVehicles();
     if (vehicles.length === 0) {
         alert('Please select at least one vehicle');
         return;
@@ -181,15 +105,12 @@ export async function generateBoxPlot() {
 
     //scatterMode = false;
     //document.getElementById('field2Container').style.display = 'none';
-
     showLoading('plotContainer');
-
-    const field = getSelectedField();
+    const url = apiUrl + endpoint;
     const body = {
         units_id: vehicles,
         field: field
     };
-    const url = new URL(apiUrl + '/api/plot/boxplot');
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -210,6 +131,17 @@ export async function generateBoxPlot() {
         showPlot('plotContainer', data.data);
     } catch (error) {
         showError('plotContainer', 'Network error while generating plot.');
-        return;
     }
+}
+
+export async function generateTimeSeriesPlot() {
+    await generatePlot('/api/plot/timeseries');
+}
+
+export async function generateDistributionPlot() {
+    await generatePlot('/api/plot/distribution');
+}
+
+export async function generateBoxPlot() {
+    await generatePlot('/api/plot/boxplot');
 }
