@@ -102,6 +102,29 @@ function getSelectedField() {
     return document.getElementById('fieldSelect').value;
 }
 
+async function fetchPlotData(endpoint, body) {
+    const url = apiUrl + endpoint;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            return { error: 'Failed to generate plot.' };
+        }
+        const data = await response.json();
+        if (data.status === 400) {
+            return { error: data.data };
+        }
+        showPlot('plotContainer', data.data);
+    } catch (error) {
+        return { error: 'Network error while generating plot.' };
+    }
+}
+
 async function generatePlot(endpoint) {
     const vehicles = getSelectedVehicles();
     const field = getSelectedField();
@@ -113,32 +136,11 @@ async function generatePlot(endpoint) {
     scatterMode = false;
     document.getElementById('field2Container').style.display = 'none';
     showLoading('plotContainer');
-    const url = apiUrl + endpoint;
     const body = {
         units_id: vehicles,
         field: field
     };
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-        if (!response.ok) {
-            showError('plotContainer', 'Failed to generate plot.');
-            return;
-        }
-        const data = await response.json();
-        if (data.status === 400) {
-            showError('plotContainer', data.data);
-            return;
-        }
-        showPlot('plotContainer', data.data);
-    } catch (error) {
-        showError('plotContainer', 'Network error while generating plot.');
-    }
+    await fetchPlotData(endpoint, body);
 }
 
 export async function generateTimeSeriesPlot() {
@@ -164,31 +166,10 @@ export async function generateCorrelationPlot() {
     document.getElementById('field2Container').style.display = 'none';
 
     showLoading('plotContainer');
-    const url = apiUrl + '/api/plot/heatmap';
     const body = {
         units_id: vehicles[0]
     };
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-        if (!response.ok) {
-            showError('plotContainer', 'Failed to generate plot.');
-            return;
-        }
-        const data = await response.json();
-        if (data.status === 400) {
-            showError('plotContainer', data.data);
-            return;
-        }
-        showPlot('plotContainer', data.data);
-    } catch (error) {
-        showError('plotContainer', 'Network error while generating plot.');
-    }
+    await fetchPlotData('/api/plot/heatmap', body);
 }
 
 export async function toggleScatterMode() {
@@ -216,26 +197,5 @@ async function generateScatterPlot() {
         field_x: field1,
         field_y: field2
     };
-    const url = new URL(apiUrl + '/api/plot/scatter');
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-        if (!response.ok) {
-            showError('plotContainer', 'Failed to generate plot.');
-            return;
-        }
-        const data = await response.json();
-        if (data.status === 400) {
-            showError('plotContainer', data.data);
-            return;
-        }
-        showPlot('plotContainer', data.data);
-    } catch (error) {
-        showError('plotContainer', 'Network error while generating plot.');
-    }
+    await fetchPlotData('/api/plot/scatter', body);
 }
