@@ -3,7 +3,8 @@ import { fillVehicleSelection,
          fillFieldSelection,
          generateTimeSeriesPlot,
          generateDistributionPlot,
-        generateBoxPlot } from './plots.js';
+         generateBoxPlot,
+         generateCorrelationPlot } from './plots.js';
 
 let lista_unidades = [];
 let socket = undefined;
@@ -362,6 +363,7 @@ $(document).ready(function() {
     $('#btnTimeSeries').on('click', generateTimeSeriesPlot);
     $('#btnDistributionPlot').on('click', generateDistributionPlot);
     $('#btnBoxPlot').on('click', generateBoxPlot);
+    $('#btnCorrHeatmap').on('click', generateCorrelationPlot);
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {

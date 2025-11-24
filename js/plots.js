@@ -145,3 +145,41 @@ export async function generateDistributionPlot() {
 export async function generateBoxPlot() {
     await generatePlot('/api/plot/boxplot');
 }
+
+export async function generateCorrelationPlot() {
+    const vehicles = getSelectedVehicles();
+    if (vehicles.length !== 1) {
+        alert('Please select exactly one vehicle for correlation heatmap.');
+        return;
+    }
+
+    //scatterMode = false;
+    //document.getElementById('field2Container').style.display = 'none';
+
+    showLoading('plotContainer');
+    const url = apiUrl + '/api/plot/heatmap';
+    const body = {
+        units_id: vehicles[0]
+    };
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            showError('plotContainer', 'Failed to generate plot.');
+            return;
+        }
+        const data = await response.json();
+        if (data.status === 400) {
+            showError('plotContainer', data.data);
+            return;
+        }
+        showPlot('plotContainer', data.data);
+    } catch (error) {
+        showError('plotContainer', 'Network error while generating plot.');
+    }
+}
