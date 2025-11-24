@@ -2,7 +2,8 @@ import { apiUrl } from './config.js';
 import { fillVehicleSelection,
          fillFieldSelection,
          generateTimeSeriesPlot,
-         generateDistributionPlot } from './plots.js';
+         generateDistributionPlot,
+        generateBoxPlot } from './plots.js';
 
 let lista_unidades = [];
 let socket = undefined;
@@ -360,6 +361,7 @@ $(document).ready(function() {
     // Associa botones para gráficas
     $('#btnTimeSeries').on('click', generateTimeSeriesPlot);
     $('#btnDistributionPlot').on('click', generateDistributionPlot);
+    $('#btnBoxPlot').on('click', generateBoxPlot);
 
     // Manejar el botón de cerrar
     $('#sidebar .close-btn').click(function() {

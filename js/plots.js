@@ -171,3 +171,45 @@ export async function generateDistributionPlot() {
         return;
     }
 }
+
+export async function generateBoxPlot() {
+    const vehicles = getSelectedVehicles();
+    if (vehicles.length === 0) {
+        alert('Please select at least one vehicle');
+        return;
+    }
+
+    //scatterMode = false;
+    //document.getElementById('field2Container').style.display = 'none';
+
+    showLoading('plotContainer');
+
+    const field = getSelectedField();
+    const body = {
+        units_id: vehicles,
+        field: field
+    };
+    const url = new URL(apiUrl + '/api/plot/boxplot');
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            showError('plotContainer', 'Failed to generate plot.');
+            return;
+        }
+        const data = await response.json();
+        if (data.status === 400) {
+            showError('plotContainer', data.data);
+            return;
+        }
+        showPlot('plotContainer', data.data);
+    } catch (error) {
+        showError('plotContainer', 'Network error while generating plot.');
+        return;
+    }
+}
