@@ -113,11 +113,13 @@ async function fetchPlotData(endpoint, body) {
             body: JSON.stringify(body)
         });
         if (!response.ok) {
-            return { error: 'Failed to generate plot.' };
+            showError('plotContainer', 'Failed to fetch plot data.');
+            return;
         }
         const data = await response.json();
         if (data.status === 400) {
-            return { error: data.data };
+            showError('plotContainer', data.error);
+            return;
         }
         showPlot('plotContainer', data.data);
     } catch (error) {
